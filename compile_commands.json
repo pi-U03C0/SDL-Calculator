@@ -1,0 +1,16 @@
+[
+  {
+    "arguments": [
+      "c:/ProgramData/mingw64/mingw64/bin/g++.exe",
+      "-c",
+      "c:/Users/dell/CodingPython/Project/calculator/source/main.cpp",
+      "-o",
+      "c:/Users/dell/CodingPython/Project/calculator/bin/Source/main.cpp.o",
+      "-Ic:/Users/dell/CodingPython/Project/calculator/include",
+      "-Lc:/Users/dell/CodingPython/Project/calculator/lib"
+    ],
+    "directory": "C:/Users/dell/CodingPython/Project/calculator",
+    "file": "c:/Users/dell/CodingPython/Project/calculator/source/main.cpp",
+    "output": "c:/Users/dell/CodingPython/Project/calculator/bin/main.exe",
+  }
+]

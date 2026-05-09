@@ -13,6 +13,7 @@ namespace Globles
   std::vector<CalculatorButtons> G_Buttons_L;
   TTF_Font* Font = NULL;
   char* CurrentExpression = NULL;
+  CalculatorLabel* ExpressionLabel = NULL;
 };
 
 int init()
@@ -29,7 +30,7 @@ int init()
       return 1;
     }
 
-    Globles::MainWindow = SDL_CreateWindow( "Calculator", 600, 600, SDL_WINDOW_RESIZABLE);
+    Globles::MainWindow = SDL_CreateWindow( "Calculator", INIT_WINDOW_SCREEN_SIZE_W, INIT_WINDOW_SCREEN_SIZE_H, SDL_WINDOW_RESIZABLE);
     if (!Globles::MainWindow)
     {
         printf("SDL_CreateWindow Error: %s\n", SDL_GetError());

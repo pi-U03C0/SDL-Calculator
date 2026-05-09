@@ -6,18 +6,23 @@
 
 void Key_Event_H(SDL_KeyboardEvent key)
 {
-    printf("Key(%d)\n", key.key);
-
-    if (key.key == SDLK_ESCAPE) Globles::IsRunning = false;
-    if (key.key == SDLK_F11) SDL_SetWindowFullscreen(Globles::MainWindow, true);
+  if (key.key == SDLK_ESCAPE) Globles::IsRunning = false;
+  if (key.key == SDLK_F11) SDL_SetWindowFullscreen(Globles::MainWindow, true);
 }
 
 void Mouse_Event_H(SDL_MouseButtonEvent mouse_H)
 {
-    for (int i = 0; i < (int)Globles::G_Buttons_L.size() ; i++)
+  #ifdef print_mouse_pos
+  printf("mouse.x = %.2f,mouse.y = %.2f\n",mouse_H.x,mouse_H.y);
+  #endif
+
+  for (int i = 0; i < (int)Globles::G_Buttons_L.size() ; i++)
+  {
+    if (Globles::G_Buttons_L[i].check_and_run(mouse_H.x, mouse_H.y))
     {
-      Globles::G_Buttons_L[i].check_and_run(mouse_H.x, mouse_H.y);
+      break;
     }
+  }
 }
 
 int SDL_Event_H()

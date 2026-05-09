@@ -1,6 +1,5 @@
 #Function Names:
 #         ClearFile
-#         Compile-Launcher
 #         Compile-Source
 #         SetUp-SDL
 
@@ -55,8 +54,9 @@ function Compile-Source
     mkdir "$BIN/Source" | Out-Null
   }
   $SOURCE_OBJ = (ls -name -Path "$SOURCE/*.cpp")
+  $DidError = $false
 
-  $SOURCE_OBJ | ForEach-Object -Parallel {
+  $Results = $SOURCE_OBJ | ForEach-Object -Parallel {
     Write-Host "SRC: Source/$_ -> bin/$_.o"
 
     if ($using:Verbose)
@@ -65,8 +65,12 @@ function Compile-Source
     }
 
     & "g++" "-o" "$using:BIN/Source/$_.o" "-c" "$using:SOURCE/$_" "-I$using:INCLUDE" $using:CFLAG
+    return ($LASTEXITCODE -ne 0)
 
-  } -ThrottleLimit $CoreConuter| Out-Null
+  } -ThrottleLimit $CoreConuter
+
+  $DidError = $Results -contains $true
+  return (-not ($DidError))
 }
 
 function SetUp-SDL
@@ -131,14 +135,19 @@ if ($ComMainExe)
 
 if ($CompileMainExe)
 {
-  Compile-Source
+  if (-not (Compile-Source))
+  {
+    Write-Host "Error Compileing Source"
+    exit
+  }
+
   $SOURCE_OBJ =$((ls -name -Path "$BIN/Source/*.o") | ForEach-Object {
     echo "$BIN/Source/$_"
   })
 
   if ($Verbose)
   {
-    Write-Host "g++ -o $BIN/$EXENAME.exe $SOURCE_OBJ"
+    Write-Host "g++ -o $BIN/$EXENAME.exe $SOURCE_OBJ -L$LIB -lSDL3 -lSDL3_ttf"
   }
 
   Write-Host "EXE: -> bin/$EXENAME.exe"

@@ -1,9 +1,12 @@
 #ifndef render_h
 #define render_h
 
-#include "SDL3/SDL_render.h"
+#include <SDL3/SDL.h>
 
 #define ClearScreen(r,g,b,a) SDL_SetRenderDrawColor(Globles::MainWindowRender,r,g,b,a); SDL_RenderClear(Globles::MainWindowRender);
+
+#define DEPACK_SDL_COLOUR_INT(SDL_Color_S) SDL_Color_S.r,SDL_Color_S.g,SDL_Color_S.b,SDL_Color_S.a
+#define PACK_SDL_COLOUR_INT(r,g,b) (SDL_Color){(Uint8)(r),(Uint8)(g),(Uint8)(b),(Uint8)(255)}
 
 void gmain();
 

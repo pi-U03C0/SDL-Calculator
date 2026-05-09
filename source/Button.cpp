@@ -7,7 +7,7 @@
 #include <SDL3/SDL.h>
 #include <winerror.h>
 
-CalculatorButtons::CalculatorButtons(char* text,void (*callback)(char*),int x, int y, int h, int w, int r, int g, int b,int a)
+CalculatorButtons::CalculatorButtons(char* text,void (*callback)(CalculatorButtons*),int x, int y, int h, int w, int r, int g, int b,int a)
 {
     this->text = text;
     this -> x = x;
@@ -35,13 +35,37 @@ void CalculatorButtons::Render()
   SDL_DrawText(this -> text,text_x,text_y,255,255,255);
 }
 
-void CalculatorButtons::check_and_run(float x,float y)
+bool CalculatorButtons::check_and_run(float x,float y)
 {
-  if ((x >= this -> x && x <= (this -> x + this -> w)) && (y >= this -> y && y <= (this -> y + this -> h)))
+  // TODO: Make it so the hit box is a bit smaller than the real box
+  int check_w = this -> w;
+  int check_h = this -> h;
+
+  if ((x >= this -> x && x <= (this -> x + check_w)) && (y >= this -> y && y <= (this -> y + check_h)))
   {
-    this -> callback(this -> text);
+    this -> callback(this);
+    return true;
   }
-  return;
+
+  return false;
+}
+
+bool CalculatorButtons::check(float x,float y)
+{
+  int check_w = this -> w;
+  int check_h = this -> h;
+
+  if ((x >= this -> x && x <= (this -> x + check_w)) && (y >= this -> y && y <= (this -> y + check_h)))
+  {
+    return true;
+  }
+
+  return false;
+}
+
+void CalculatorButtons::run()
+{
+  this -> callback(this);
 }
 
 // void (**_Buttons)() = (void(**)())malloc(sizeof(void**)*10);

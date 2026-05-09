@@ -1,5 +1,6 @@
 #include "SDL3/SDL3_ttf/SDL_ttf.h"
 #include "SDL3/SDL_oldnames.h"
+#include "SDL3/SDL_pixels.h"
 #include "SDL3/SDL_render.h"
 #include "SDL3/SDL_stdinc.h"
 #include <SDL3/SDL.h>
@@ -8,6 +9,7 @@
 
 void  SDL_DrawRect(float x,float y,float h,float w,float r,float g,float b,float a=255,bool fill=true)
 {
+
   SDL_SetRenderDrawColor(Globles::MainWindowRender,r,g,b,a);
   SDL_FRect maco_temp_var_rect = {x,y,w,h};
   if (fill)
@@ -40,6 +42,5 @@ void SDL_DrawText(char* text,float x,float y,Uint8 r,Uint8 g,Uint8 b,Uint8 a=255
     SDL_RenderTexture(Globles::MainWindowRender, texture, NULL, &rect);
 
     SDL_DestroyTexture(texture);
-
 }
 

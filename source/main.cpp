@@ -1,9 +1,11 @@
-#include "SDL3/SDL_video.h"
-#include <cstdio>
+#include <stdio.h>
 #include <iostream>
 #include <SDL3/SDL.h>
 #include <Globles.h>
 #include <render.h>
+#include <LogicThread.h>
+#include <vector>
+#include <windows.h>
 
 namespace Globles
 {
@@ -12,8 +14,12 @@ namespace Globles
   SDL_Renderer* MainWindowRender = NULL;
   std::vector<CalculatorButtons> G_Buttons_L;
   TTF_Font* Font = NULL;
-  char* CurrentExpression = NULL;
+  char* CurrentExpression = strdup("0");
   CalculatorLabel* ExpressionLabel = NULL;
+  DWORD LogicThread_DWORD = NULL;
+  HANDLE LogicThread_HANDLE = NULL;
+  std::vector<SDL_Event> Events;
+  std::mutex EventLock;
 };
 
 int init()
@@ -56,11 +62,16 @@ int init()
 
 void Quit()
 {
-    SDL_DestroyRenderer( Globles::MainWindowRender);
-    SDL_DestroyWindow( Globles::MainWindow);
+    SDL_DestroyRenderer(Globles::MainWindowRender);
+    SDL_DestroyWindow(Globles::MainWindow);
 
     TTF_Quit();
     SDL_Quit();
+}
+
+inline void StartLogicThread()
+{
+  Globles::LogicThread_HANDLE = CreateThread(NULL, 0, LogicThread_ThreadMain, NULL, 0, &Globles::LogicThread_DWORD);
 }
 
 #ifndef TEST
@@ -78,7 +89,11 @@ int main(int argc, char **argv)
 
     Globles::IsRunning = true;
 
+    StartLogicThread();
+
     gmain();;
+
+    WaitForSingleObject(Globles::LogicThread_HANDLE, INFINITE);
 
     Quit();
 

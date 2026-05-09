@@ -1,25 +1,15 @@
 #include "Buttons.h"
 #include "Label.h"
-#include "SDL3/SDL_video.h"
 #include <Globles.h>
 #include <SDL3/SDL.h>
 #include <EventHandler.h>
-#include <cstdio>
-#include <cstdlib>
-#include <mutex>
-#include <pthread.h>
 #include <render.h>
+#include <stdio.h>
 
 void operator_check(CalculatorButtons* cal_b)
 {
   printf("callback text: %s pos:(%d,%d)\n",cal_b -> text,cal_b -> x,cal_b -> y);
-}
-void print_screen_size(CalculatorButtons* cal_b)
-{
-  int window_h;
-  int window_w;
-  SDL_GetWindowSize(Globles::MainWindow, &window_w, &window_h);
-  printf("window_w: %d,window_h: %d\n",window_w,window_h);
+  Globles::CurrentExpression = cal_b -> text;
 }
 
 void RenderButtons()
@@ -66,7 +56,7 @@ void add_buttons()
     CalculatorButtons button_equ = CalculatorButtons((char*)"=",operator_check,120,220,30,50,100,100,200,100);
     CalculatorButtons button_Clear = CalculatorButtons((char*)"C",operator_check,00,220,30,50,100,100,200,100);
 
-    Globles::ExpressionLabel = new CalculatorLabel((char*)"test lable",0,0,170,90,PACK_SDL_COLOUR_INT(30,100,100),PACK_SDL_COLOUR_INT(255,0,0));
+    Globles::ExpressionLabel = new CalculatorLabel(Globles::CurrentExpression,0,0,230,90,PACK_SDL_COLOUR_INT(255,255,255),PACK_SDL_COLOUR_INT(100,200,100),200,60);
 
     Globles::G_Buttons_L.push_back(button_1);
     Globles::G_Buttons_L.push_back(button_2);
@@ -86,21 +76,21 @@ void add_buttons()
 
     Globles::G_Buttons_L.push_back(button_equ);
     Globles::G_Buttons_L.push_back(button_Clear);
-    CalculatorButtons pritn_size =  CalculatorButtons( (char*)"get size",print_screen_size ,00,250,40,50,100,200,100,100);
-    Globles::G_Buttons_L.push_back(pritn_size);
 }
 
 void gmain()
 {
     add_buttons();
+
     while (Globles::IsRunning)
     {
         ClearScreen(0,100,255,255);
 
-        SDL_Event_H();
+        SDL_Event_Append();
 
         gmain_render();
 
         SDL_RenderPresent( Globles::MainWindowRender);
+        SDL_Delay(100);
     }
 }

@@ -14,8 +14,10 @@ class CalculatorLabel
     SDL_Color fg;
     SDL_Color bg;
     char* text;
+    int offset_x;
+    int offset_y;
 
-  CalculatorLabel(char* text,int x,int y,int w,int h,SDL_Color fg,SDL_Color bg);
+  CalculatorLabel(char* text,int x,int y,int w,int h,SDL_Color fg,SDL_Color bg,int offset_x=0,int offset_y=0);
   void render();
 };
 #endif

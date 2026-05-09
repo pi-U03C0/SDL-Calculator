@@ -1,11 +1,17 @@
 #include "SDL3/SDL.h"
+#include "SDL3/SDL_events.h"
 #include <EventHandler.h>
+#include <mutex>
 #include <render.h>
 #include <cstdio>
 #include <Globles.h>
 
 void Key_Event_H(SDL_KeyboardEvent key)
 {
+  #ifdef print_key
+  printf("key: %d",key.key);
+  #endif
+
   if (key.key == SDLK_ESCAPE) Globles::IsRunning = false;
   if (key.key == SDLK_F11) SDL_SetWindowFullscreen(Globles::MainWindow, true);
 }
@@ -25,11 +31,9 @@ void Mouse_Event_H(SDL_MouseButtonEvent mouse_H)
   }
 }
 
-int SDL_Event_H()
+void SDL_Event_H()
 {
-  SDL_Event event;
-
-  while (SDL_PollEvent(&event))
+  for (SDL_Event event : Globles::Events)
   {
     switch (event.type)
     {
@@ -38,7 +42,6 @@ int SDL_Event_H()
         Globles::IsRunning = false;
         break;
       }
-
       case SDL_EVENT_KEY_DOWN:
       {
         Key_Event_H(event.key);
@@ -50,7 +53,21 @@ int SDL_Event_H()
           break;
       }
     }
+       Globles::Events.pop_back();
   }
-  return 0;
 }
 
+void SDL_Event_Append()
+{
+  SDL_Event event;
+  while (SDL_PollEvent(&event))
+  {
+    if (event.type == SDL_EVENT_QUIT)
+    {
+      Globles::IsRunning = false;
+    }
+    Globles::EventLock.lock();
+    Globles::Events.push_back(event);
+    Globles::EventLock.unlock();
+  }
+}

@@ -1,10 +1,21 @@
 #include "SDL3/SDL.h"
 #include "SDL3/SDL_events.h"
+#include "SDL3/SDL_video.h"
 #include <EventHandler.h>
 #include <mutex>
 #include <render.h>
 #include <cstdio>
 #include <Globles.h>
+
+#ifdef print_window_size_on_z
+void print_window_size()
+{
+  int w;
+  int h;
+  SDL_GetWindowSize(Globles::MainWindow, &w, &h);
+  printf("Globles::MainWindow: w=%d,h=%d\n",w,h);
+}
+#endif
 
 void Key_Event_H(SDL_KeyboardEvent key)
 {
@@ -14,6 +25,11 @@ void Key_Event_H(SDL_KeyboardEvent key)
 
   if (key.key == SDLK_ESCAPE) Globles::IsRunning = false;
   if (key.key == SDLK_F11) SDL_SetWindowFullscreen(Globles::MainWindow, true);
+
+  #ifdef print_window_size_on_z
+  if (key.key == *"z") print_window_size();
+  #endif
+
 }
 
 void Mouse_Event_H(SDL_MouseButtonEvent mouse_H)

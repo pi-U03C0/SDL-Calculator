@@ -2,7 +2,9 @@
 #include "render.h"
 #include <Label.h>
 #include <Globles.h>
+#include <cstdio>
 #include <exception>
+#include <sec_api/stdio_s.h>
 
 CalculatorLabel::CalculatorLabel(char* text,int x,int y,int w,int h,SDL_Color fg,SDL_Color bg,int offset_x,int offset_y)
 {
@@ -15,6 +17,7 @@ CalculatorLabel::CalculatorLabel(char* text,int x,int y,int w,int h,SDL_Color fg
   this -> bg = bg;
   this -> offset_x = offset_x;
   this -> offset_y = offset_y;
+
 }
 
 void CalculatorLabel::render()

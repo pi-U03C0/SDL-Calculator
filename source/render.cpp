@@ -17,6 +17,7 @@ void  SDL_DrawRect(float x,float y,float h,float w,float r,float g,float b,float
     SDL_RenderFillRect(Globles::MainWindowRender, &maco_temp_var_rect);
     return;
   }
+
   SDL_RenderRect(Globles::MainWindowRender, &maco_temp_var_rect);
 }
 

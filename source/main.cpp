@@ -1,9 +1,11 @@
+#include <cstdlib>
 #include <stdio.h>
 #include <iostream>
 #include <SDL3/SDL.h>
 #include <Globles.h>
 #include <render.h>
 #include <LogicThread.h>
+#include <string.h>
 #include <vector>
 #include <windows.h>
 
@@ -14,9 +16,9 @@ namespace Globles
   SDL_Renderer* MainWindowRender = NULL;
   std::vector<CalculatorButtons> G_Buttons_L;
   TTF_Font* Font = NULL;
-  char* CurrentExpression = strdup("0");
+  char* CurrentExpression = (char*)malloc(1024);
   CalculatorLabel* ExpressionLabel = NULL;
-  DWORD LogicThread_DWORD = NULL;
+  DWORD LogicThread_DWORD = 0;
   HANDLE LogicThread_HANDLE = NULL;
   std::vector<SDL_Event> Events;
   std::mutex EventLock;
@@ -56,6 +58,8 @@ int init()
     }
 
     Globles::Font = TTF_OpenFont("c:/Windows/Fonts/arial.ttf", 15);
+
+    Globles::CurrentExpression = strdup("0");
 
     return 0;
 }

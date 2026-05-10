@@ -30,7 +30,7 @@ $BIN = "$OWD/bin"
 $LIB = "$OWD/Lib"
 $INCLUDE = "$OWD/include"
 
-$CFLAG = @("-Wall","-Wextra")
+$CFLAG = @("-Wall","-Wextra","-ggdb")
 $CFLAGI = @("-Wno-unused-parameter","-Wno-sign-compare","-Wno-missing-field-initializers","-Wno-cast-function-type")
 
 $SDLDLLP = "$BIN/SDL3.dll"
@@ -168,6 +168,14 @@ if ($CompileMainExe)
       if ($LASTEXITCODE -eq -1073741795)
       {
         $Message = "`e[31mILLEGAL INSTRUCTION`e[0m"
+      }
+      if ($LASTEXITCODE -eq -1073740940)
+      {
+        $Message = "`e[31mHEAP CORRUPTION`e[0m"
+      }
+      if ($LASTEXITCODE -eq -1073741676)
+      {
+        $Message = "`e[31mDIVIDE BY ZERO`e[0m"
       }
       Write-Host "`nLASTEXITCODE: $LASTEXITCODE $Message" -nonewline
     }

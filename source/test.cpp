@@ -1,37 +1,44 @@
+#include <cstdio>
 
 #ifdef TEST
 
 #include <SDL3/SDL.h>
-#include <SDL3/SDL3_ttf/SDL_ttf.h>
-#include <stdio.h>
+#include <stdlib.h>
+
+void write_to_file(Uint32* pixels)
+{
+  FILE* image_file = fopen("coolimage.raw", "wb");
+  fwrite(pixels, 100*100,image_file);
+
+  fclose(image_file);
+}
 
 int main()
 {
     SDL_Init(SDL_INIT_VIDEO);
-    TTF_Init();
 
-    SDL_Window* window = SDL_CreateWindow( "SDL3 Text", 800, 600, 0);
+    SDL_Window* window = SDL_CreateWindow( "Raw RGBA", 800, 600, 0);
 
     SDL_Renderer* renderer = SDL_CreateRenderer( window, NULL);
 
-    // Load font
-    TTF_Font* font = TTF_OpenFont( "C:/Windows/Fonts/arial.ttf", 48);
+    // 2x2 RGBA image
+    Uint32* pixels = (Uint32*)malloc( 100 * 100 * sizeof(Uint32));
 
-    if (!font)
+    for (int y = 0; y < 100; y++)
     {
-        printf("%s\n", SDL_GetError());
-        return 1;
+        for (int x = 0; x < 100; x++)
+        {
+            pixels[y * 100 + x] = 0xFF0000FF + ((x << 8) * (y << 8))*100;
+        }
     }
 
-    // Create text surface
-    SDL_Surface* surface = TTF_RenderText_Blended( font, "Hello SDL3", 0, (SDL_Color){5,255,255,255});
+    SDL_Surface* surface = SDL_CreateSurfaceFrom( 100, 100, SDL_PIXELFORMAT_ARGB8888, pixels, 100 * sizeof(Uint32));
 
-    // Convert surface to texture
     SDL_Texture* texture = SDL_CreateTextureFromSurface( renderer, surface);
 
-    SDL_FRect rect = { 100, 100, (float)surface->w, (float)surface->h };
-
     SDL_DestroySurface(surface);
+
+    SDL_FRect rect = { 10, 10, 100, 100 };
 
     bool running = true;
     SDL_Event event;
@@ -40,27 +47,35 @@ int main()
     {
         while (SDL_PollEvent(&event))
         {
-            if (event.type == SDL_EVENT_QUIT) running = false;
+            if (event.type == SDL_EVENT_QUIT)
+            {
+                running = false;
+            }
         }
 
-        SDL_SetRenderDrawColor( renderer, 0,0,0,255);
+        SDL_SetRenderDrawColor(
+            renderer,
+            0,0,0,255
+        );
 
         SDL_RenderClear(renderer);
 
-        // Draw text
-        SDL_RenderTexture( renderer, texture, NULL, &rect);
+        // Draw raw RGBA pixels
+        SDL_RenderTexture(
+            renderer,
+            texture,
+            NULL,
+            &rect
+        );
 
         SDL_RenderPresent(renderer);
     }
 
     SDL_DestroyTexture(texture);
-    TTF_CloseFont(font);
-
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 
-    TTF_Quit();
     SDL_Quit();
+    
 }
-
 #endif // !TEST

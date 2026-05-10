@@ -12,7 +12,7 @@
 #include <windows.h>
 
 #define INIT_WINDOW_SCREEN_SIZE_W 230
-#define INIT_WINDOW_SCREEN_SIZE_H 250
+#define INIT_WINDOW_SCREEN_SIZE_H 290
 
 typedef void ((*RenderFunctions)());
 typedef void ((*KeyMap)(int));

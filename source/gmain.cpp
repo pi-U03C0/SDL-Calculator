@@ -1,16 +1,39 @@
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 #include "Buttons.h"
 #include "Label.h"
 #include <Globles.h>
 #include <SDL3/SDL.h>
 #include <EventHandler.h>
+#include <cstdio>
 #include <render.h>
-#include <stdio.h>
+#include <Util.h>
+#include <windows.h>
 
 void operator_check(CalculatorButtons* cal_b)
 {
+  #ifdef verbose
   printf("callback text: %s pos:(%d,%d)\n",cal_b -> text,cal_b -> x,cal_b -> y);
-  Globles::CurrentExpression = cal_b -> text;
+  #endif
+
+  if (!strcmp(cal_b -> text,"C"))
+  {
+    Globles::CurrentExpression = (char*)"0";
+    return;
+  }
+  Globles::CurrentExpression = stradd(Globles::CurrentExpression,cal_b -> text);
 }
+
+#ifdef reset_window_size_button
+void reset_size(CalculatorButtons* cal_b)
+{
+  SDL_SetWindowFullscreen(Globles::MainWindow,false);
+  HWND window_H = (HWND)SDL_GetPointerProperty(SDL_GetWindowProperties(Globles::MainWindow), SDL_PROP_WINDOW_WIN32_HWND_POINTER, NULL);
+  ShowWindow(window_H, SW_RESTORE);
+  SDL_SetWindowSize(Globles::MainWindow, INIT_WINDOW_SCREEN_SIZE_W, INIT_WINDOW_SCREEN_SIZE_H);
+}
+#endif
 
 void RenderButtons()
 {
@@ -26,6 +49,7 @@ void RenderExpression()
   {
     return;
   }
+
   Globles::ExpressionLabel->render();
 }
 
@@ -49,12 +73,15 @@ void add_buttons()
     CalculatorButtons button_0 = CalculatorButtons((char*)"0",operator_check,60,220,30,50,200,100,200,100);
 
     CalculatorButtons button_add = CalculatorButtons((char*)"+",operator_check,180,100,30,50,100,100,200,100);
-    CalculatorButtons button_sub = CalculatorButtons((char*)"sub",operator_check,180,140,30,50,100,100,200,100);
-    CalculatorButtons button_div = CalculatorButtons((char*)"mul",operator_check,180,180,30,50,100,100,200,100);
-    CalculatorButtons button_mul = CalculatorButtons((char*)"div",operator_check,180,220,30,50,100,100,200,100);
+    CalculatorButtons button_sub = CalculatorButtons((char*)"-",operator_check,180,140,30,50,100,100,200,100);
+    CalculatorButtons button_div = CalculatorButtons((char*)"*",operator_check,180,180,30,50,100,100,200,100);
+    CalculatorButtons button_mul = CalculatorButtons((char*)"/",operator_check,180,220,30,50,100,100,200,100);
 
     CalculatorButtons button_equ = CalculatorButtons((char*)"=",operator_check,120,220,30,50,100,100,200,100);
     CalculatorButtons button_Clear = CalculatorButtons((char*)"C",operator_check,00,220,30,50,100,100,200,100);
+
+    CalculatorButtons button_pread = CalculatorButtons((char*)".",operator_check,120,260,30,50,100,100,200,100);
+    CalculatorButtons button_back = CalculatorButtons((char*)"⌫",operator_check,00,220,30,50,100,100,200,100);
 
     Globles::ExpressionLabel = new CalculatorLabel(Globles::CurrentExpression,0,0,230,90,PACK_SDL_COLOUR_INT(255,255,255),PACK_SDL_COLOUR_INT(100,200,100),200,60);
 
@@ -76,6 +103,13 @@ void add_buttons()
 
     Globles::G_Buttons_L.push_back(button_equ);
     Globles::G_Buttons_L.push_back(button_Clear);
+    Globles::G_Buttons_L.push_back(button_back);
+    Globles::G_Buttons_L.push_back(button_pread);
+
+    #ifdef reset_window_size_button
+    CalculatorButtons button_reset_size = CalculatorButtons((char*)"snap",reset_size,0,300,30,50,255,0,0,0);
+    Globles::G_Buttons_L.push_back(button_reset_size);
+    #endif
 }
 
 void gmain()

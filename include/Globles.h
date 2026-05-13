@@ -14,6 +14,9 @@
 #define INIT_WINDOW_SCREEN_SIZE_W 230
 #define INIT_WINDOW_SCREEN_SIZE_H 290
 
+#define INIT_LABEL_TEXT_OFFSET_X 200
+#define INIT_LABEL_TEXT_OFFSET_Y 60
+
 typedef void ((*RenderFunctions)());
 typedef void ((*KeyMap)(int));
 
@@ -31,6 +34,7 @@ namespace Globles
  extern HANDLE LogicThread_HANDLE;
  extern std::vector<SDL_Event> Events;
  extern std::mutex EventLock;
+ extern int RenderWait;
 };
 
 #endif

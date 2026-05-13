@@ -1,5 +1,3 @@
-#include "SDL3/SDL3_ttf/SDL_ttf.h"
-#include <cstring>
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
 #include "EventHandler.h"
@@ -15,14 +13,11 @@ DWORD WINAPI LogicThread_ThreadMain(LPVOID lpParam)
     {
       if (strcmp(Globles::ExpressionLabel -> text, Globles::CurrentExpression))
       {
-        int str_w{};
+        int str_w;
         TTF_GetStringSize(Globles::Font, " ", 1 , &str_w, NULL);
         Globles::ExpressionLabel -> offset_x -= str_w*2;
 
         Globles::ExpressionLabel -> text = Globles::CurrentExpression;
-        #ifdef verbose
-        printf("str_w: %d\n",str_w);
-        #endif
       }
 
       SDL_Event_H();

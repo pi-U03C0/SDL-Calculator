@@ -15,6 +15,9 @@ param
    [string[]]$D,
 
    [Parameter(Mandatory=$false, ValueFromPipeline=$true)]
+   [string[]]$Args,
+
+   [Parameter(Mandatory=$false, ValueFromPipeline=$true)]
    [switch]$RunExe,
 
    [Parameter(Mandatory=$false, ValueFromPipeline=$true)]
@@ -92,6 +95,13 @@ if ($D.Length -ne 0)
 {
   $D | ForEach-Object {
     $CFLAG += "-D$_"
+  }
+}
+
+if ($Args.Length -ne 0)
+{
+  $Args | ForEach-Object {
+    $CFLAG += "$_"
   }
 }
 

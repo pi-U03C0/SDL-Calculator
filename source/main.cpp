@@ -22,6 +22,7 @@ namespace Globles
   HANDLE LogicThread_HANDLE = NULL;
   std::vector<SDL_Event> Events;
   std::mutex EventLock;
+  int RenderWait = 0;
 };
 
 int init()

@@ -1,28 +1,21 @@
+#include "SDL3/SDL_log.h"
+#include "SDL3/SDL_timer.h"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
 #include "Buttons.h"
 #include "Label.h"
-#include <Globles.h>
+#include "Globles.h"
 #include <SDL3/SDL.h>
-#include <EventHandler.h>
+#include "EventHandler.h"
 #include <cstdio>
-#include <render.h>
-#include <Util.h>
+#include "render.h"
+#include "Util.h"
 #include <windows.h>
+#include "Operator.h"
 
 void operator_check(CalculatorButtons* cal_b)
 {
-  #ifdef verbose
-  printf("callback text: %s pos:(%d,%d)\n",cal_b -> text,cal_b -> x,cal_b -> y);
-  #endif
-
-  if (!strcmp(cal_b -> text,"C"))
-  {
-    Globles::CurrentExpression = (char*)"0";
-    return;
-  }
-  Globles::CurrentExpression = stradd(Globles::CurrentExpression,cal_b -> text);
 }
 
 #ifdef reset_window_size_button
@@ -61,29 +54,32 @@ void gmain_render()
 
 void add_buttons()
 {
-    CalculatorButtons button_1 = CalculatorButtons((char*)"1",operator_check,00,100,30,50,200,100,200,100);
-    CalculatorButtons button_2 = CalculatorButtons((char*)"2",operator_check,60,100,30,50,200,100,200,100);
-    CalculatorButtons button_3 = CalculatorButtons((char*)"3",operator_check,120,100,30,50,200,100,200,100);
-    CalculatorButtons button_4 = CalculatorButtons((char*)"4",operator_check,00,140,30,50,200,100,200,100);
-    CalculatorButtons button_5 = CalculatorButtons((char*)"5",operator_check,60,140,30,50,200,100,200,100);
-    CalculatorButtons button_6 = CalculatorButtons((char*)"6",operator_check,120,140,30,50,200,100,200,100);
-    CalculatorButtons button_7 = CalculatorButtons((char*)"7",operator_check,00,180,30,50,200,100,200,100);
-    CalculatorButtons button_8 = CalculatorButtons((char*)"8",operator_check,60,180,30,50,200,100,200,100);
-    CalculatorButtons button_9 = CalculatorButtons((char*)"9",operator_check,120,180,30,50,200,100,200,100);
-    CalculatorButtons button_0 = CalculatorButtons((char*)"0",operator_check,60,220,30,50,200,100,200,100);
+    CalculatorButtons button_1 = CalculatorButtons((char*)"1",operator_add_text,00,100,30,50,200,100,200,100);
+    CalculatorButtons button_2 = CalculatorButtons((char*)"2",operator_add_text,60,100,30,50,200,100,200,100);
+    CalculatorButtons button_3 = CalculatorButtons((char*)"3",operator_add_text,120,100,30,50,200,100,200,100);
+    CalculatorButtons button_4 = CalculatorButtons((char*)"4",operator_add_text,00,140,30,50,200,100,200,100);
+    CalculatorButtons button_5 = CalculatorButtons((char*)"5",operator_add_text,60,140,30,50,200,100,200,100);
+    CalculatorButtons button_6 = CalculatorButtons((char*)"6",operator_add_text,120,140,30,50,200,100,200,100);
+    CalculatorButtons button_7 = CalculatorButtons((char*)"7",operator_add_text,00,180,30,50,200,100,200,100);
+    CalculatorButtons button_8 = CalculatorButtons((char*)"8",operator_add_text,60,180,30,50,200,100,200,100);
+    CalculatorButtons button_9 = CalculatorButtons((char*)"9",operator_add_text,120,180,30,50,200,100,200,100);
+    CalculatorButtons button_0 = CalculatorButtons((char*)"0",operator_add_text,60,220,30,50,200,100,200,100);
 
     CalculatorButtons button_add = CalculatorButtons((char*)"+",operator_check,180,100,30,50,100,100,200,100);
     CalculatorButtons button_sub = CalculatorButtons((char*)"-",operator_check,180,140,30,50,100,100,200,100);
-    CalculatorButtons button_div = CalculatorButtons((char*)"*",operator_check,180,180,30,50,100,100,200,100);
-    CalculatorButtons button_mul = CalculatorButtons((char*)"/",operator_check,180,220,30,50,100,100,200,100);
+    CalculatorButtons button_div = CalculatorButtons((char*)"/",operator_check,180,180,30,50,100,100,200,100);
+    CalculatorButtons button_mul = CalculatorButtons((char*)"*",operator_check,180,220,30,50,100,100,200,100);
 
     CalculatorButtons button_equ = CalculatorButtons((char*)"=",operator_check,120,220,30,50,100,100,200,100);
-    CalculatorButtons button_Clear = CalculatorButtons((char*)"C",operator_check,00,220,30,50,100,100,200,100);
+    CalculatorButtons button_Clear = CalculatorButtons((char*)"C",operator_clear,00,260,30,50,100,100,200,100);
 
-    CalculatorButtons button_pread = CalculatorButtons((char*)".",operator_check,120,260,30,50,100,100,200,100);
-    CalculatorButtons button_back = CalculatorButtons((char*)"⌫",operator_check,00,220,30,50,100,100,200,100);
+    CalculatorButtons button_pread = CalculatorButtons((char*)".",operator_check,180,260,30,50,100,100,200,100);
+    CalculatorButtons button_back = CalculatorButtons((char*)"back",operator_back,00,220,30,50,100,100,200,100);
 
-    Globles::ExpressionLabel = new CalculatorLabel(Globles::CurrentExpression,0,0,230,90,PACK_SDL_COLOUR_INT(255,255,255),PACK_SDL_COLOUR_INT(100,200,100),200,60);
+    CalculatorButtons button_O_parentheses = CalculatorButtons((char*)"(", operator_add_text,60,260,30,50,100,100,200,100);
+    CalculatorButtons button_C_parentheses = CalculatorButtons((char*)")", operator_add_text,120,260,30,50,100,100,200,100);
+
+    Globles::ExpressionLabel = new CalculatorLabel(Globles::CurrentExpression,0,0,230,90,PACK_SDL_COLOUR_INT(255,255,255),PACK_SDL_COLOUR_INT(100,200,100),INIT_LABEL_TEXT_OFFSET_X,INIT_LABEL_TEXT_OFFSET_Y);
 
     Globles::G_Buttons_L.push_back(button_1);
     Globles::G_Buttons_L.push_back(button_2);
@@ -106,6 +102,9 @@ void add_buttons()
     Globles::G_Buttons_L.push_back(button_back);
     Globles::G_Buttons_L.push_back(button_pread);
 
+    Globles::G_Buttons_L.push_back(button_O_parentheses);
+    Globles::G_Buttons_L.push_back(button_C_parentheses);
+
     #ifdef reset_window_size_button
     CalculatorButtons button_reset_size = CalculatorButtons((char*)"snap",reset_size,0,300,30,50,255,0,0,0);
     Globles::G_Buttons_L.push_back(button_reset_size);
@@ -125,6 +124,15 @@ void gmain()
         gmain_render();
 
         SDL_RenderPresent( Globles::MainWindowRender);
-        SDL_Delay(100);
+
+        if (Globles::RenderWait != 0)
+        {
+          SDL_Delay(Globles::RenderWait);
+          Globles::RenderWait = 0;
+        }
+        else 
+        {
+          SDL_Delay(100);
+        }
     }
 }
